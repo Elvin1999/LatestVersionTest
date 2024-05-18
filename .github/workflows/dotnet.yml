@@ -36,7 +36,7 @@ jobs:
     - name: Format Code
       run: |
         dotnet tool install -g dotnet-format
-        dotnet format --fix [LatestVersionTest]
+        dotnet format --fix LatestVersionTest.sln
         echo "Formatting completed"
 
     - name: List Files After Formatting (if any)
