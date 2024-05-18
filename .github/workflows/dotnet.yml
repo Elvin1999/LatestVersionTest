@@ -1,34 +1,48 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: .NET Build, Test, and Format
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - main
 
 jobs:
   build:
-
+    name: Build, Test, and Format
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 8.0.x
-    - name: Restore dependencies
+
+    - name: Restore Dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+
+    - name: Build Solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: List Files Before Formatting
+      run: |
+        find . -name "*.cs" -print0 | xargs -0 cat
+        echo "----- End of files before formatting -----"
 
     - name: Format Code
       run: |
         dotnet tool install -g dotnet-format
         dotnet format
+        echo "Formatting completed"
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: List Files After Formatting (if any)
+      run: |
+        find . -name "*.cs" -print0 | xargs -0 cat
+        echo "----- End of files after formatting (if any) -----"
+
+    - name: Run Tests
+      run: dotnet test --no-restore --verbosity normal
