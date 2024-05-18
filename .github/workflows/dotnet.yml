@@ -29,6 +29,7 @@ jobs:
       run: |
         dotnet tool install -g dotnet-format
         dotnet format
+        echo "Formatting completed"
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
