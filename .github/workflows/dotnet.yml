@@ -28,21 +28,11 @@ jobs:
     - name: Build Solution
       run: dotnet build --configuration Release --no-restore
 
-    - name: List Files Before Formatting
-      run: |
-        find . -name "*.cs" -print0 | xargs -0 cat
-        echo "----- End of files before formatting -----"
+    - name: Install dotnet-format
+      run: dotnet tool install -g dotnet-format
 
     - name: Format Code
-      run: |
-        dotnet tool install -g dotnet-format
-        dotnet format --check
-        echo "Formatting completed"
-
-    - name: List Files After Formatting (if any)
-      run: |
-        find . -name "*.cs" -print0 | xargs -0 cat
-        echo "----- End of files after formatting (if any) -----"
+      run: dotnet dotnet-format --folder . --format --check
 
     - name: Run Tests
       run: dotnet test --no-restore --verbosity normal
