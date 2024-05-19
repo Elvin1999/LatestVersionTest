@@ -32,7 +32,7 @@ jobs:
       run: dotnet tool install -g dotnet-format
 
     - name: Format Code
-      run: dotnet-format --folder . --format
+      run: dotnet-format --fix-style warn --fix-whitespace --folder .
 
     - name: Run Tests
       run: dotnet test --no-restore --verbosity normal
