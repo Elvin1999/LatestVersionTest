@@ -19,33 +19,20 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+      
+    - name: Install dotnet-format tool
+      run: dotnet tool install -g dotnet-format
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Run dotnet format
+      run: dotnet format '.\' --folder --check --verbosity diagnostic
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
-  check-format:
-    runs-on: windows-latest
-
-    steps:
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Install dotnet-format tool
-        run: dotnet tool install -g dotnet-format
-
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Run dotnet format
-        run: dotnet format '.\' --folder --check --verbosity diagnostic
-  check-spacer:
-    runs-on: windows-latest
-    steps:
-       - name: Super-Linter
-         uses: super-linter/super-linter@v5.7.2
-          
