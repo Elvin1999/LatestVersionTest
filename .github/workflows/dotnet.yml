@@ -31,24 +31,8 @@ jobs:
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
 
-    - name: Format Code
-      run: dotnet-format --fix-style warn --fix-whitespace
-      #run: dotnet format --verify-no-changes --verbosity diagnostic
-      #run: dotnet-format
+    - name: Check out code
+      uses: actions/checkout@v2
 
-    - name: Commit files
-      if: steps.format.outputs.has-changes == 'true'
-      run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -a -m 'Automated dotnet-format update
-          Co-authored-by: ${{ github.event.pull_request.user.login }} <${{ github.event.pull_request.user.id }}+${{ github.event.pull_request.user.login }}@users.noreply.github.com>'
-    - name: Push changes
-      if: steps.format.outputs.has-changes == 'true'
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
-      
     - name: Run Tests
       run: dotnet test --no-restore --verbosity normal
