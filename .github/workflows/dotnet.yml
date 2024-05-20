@@ -25,14 +25,12 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       
-    - name: Install dotnet-format tool
+    - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
 
-    - name: Check out code
-      uses: actions/checkout@v2
+    - name: Run dotnet-format
+      run: dotnet format --fix-whitespace --check
 
-    - name: Run dotnet format
-      run: dotnet format --check
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
