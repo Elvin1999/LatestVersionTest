@@ -34,7 +34,8 @@ jobs:
     - name: Format Code
       #run: dotnet-format --fix-style warn --fix-whitespace
       #run: dotnet format --verify-no-changes --verbosity diagnostic
-      run: dotnet-format
+      #run: dotnet-format
+      run: dotnet format --fix-whitespace --check --folder .
       
     - name: Run Tests
       run: dotnet test --no-restore --verbosity normal
