@@ -1,54 +1,36 @@
-name: .NET Build, Test, and Format
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   pull_request:
-    branches:
-      - master
+    branches: [ "master" ]
 
 jobs:
   build:
-    name: Build, Test, and Format
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
-    - name: Restore Dependencies
+    - name: Restore dependencies
       run: dotnet restore
-
-    - name: Build Solution
-      run: dotnet build --configuration Release --no-restore
-
+    - name: Build
+      run: dotnet build --no-restore
+      
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
 
-    - name: Format Code
-      run: dotnet-format --fix-style warn --fix-whitespace
-      #run: dotnet format --verify-no-changes --verbosity diagnostic
-      #run: dotnet-format
+    - name: Run dotnet-format
+      run: dotnet format --verify-no-changes
 
-    - name: Commit files
-      if: steps.format.outputs.has-changes == 'true'
-      run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -a -m 'Automated dotnet-format update
-          Co-authored-by: ${{ github.event.pull_request.user.login }} <${{ github.event.pull_request.user.id }}+${{ github.event.pull_request.user.login }}@users.noreply.github.com>'
-    - name: Push changes
-      if: steps.format.outputs.has-changes == 'true'
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
-      
-    - name: Run Tests
-      run: dotnet test --no-restore --verbosity normal
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
