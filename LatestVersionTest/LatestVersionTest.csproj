@@ -11,4 +11,7 @@
     <ItemGroup>
         <None Include="C:\Users\camalzadeelvin\source\repos\LatestVersionTest\LatestVersionTest\.editorconfig" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
 </Project>
