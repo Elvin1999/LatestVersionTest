@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
 
@@ -32,9 +32,25 @@ jobs:
       run: dotnet tool install -g dotnet-format
 
     - name: Format Code
-      #run: dotnet-format --fix-style warn --fix-whitespace
+      run: dotnet-format --fix-style warn --fix-whitespace
       #run: dotnet format --verify-no-changes --verbosity diagnostic
-      run: dotnet-format
+      #run: dotnet-format
+
+    - name: Configure Git
+      run: |
+        git config --global user.name 'Elvin1999'
+        git config --global user.email 'camalzade_elvin@mail.ru'
+
+    - name: Check for file changes and commit if necessary
+      run: |
+        if [[ $(git status --porcelain) ]]; then
+          git add .
+          git commit -m "Apply dotnet-format fixes"
+          git push
+        else
+          echo "No changes detected"
+
+      
       
     - name: Run Tests
       run: dotnet test --no-restore --verbosity normal
