@@ -36,17 +36,21 @@ jobs:
       #run: dotnet format --verify-no-changes --verbosity diagnostic
       #run: dotnet-format
 
+    - name: Configure Git
+      run: |
+        git config --global user.name 'Elvin1999'
+        git config --global user.email 'camalzade_elvin@mail.ru'
+
     - name: Check for file changes
       id: git-check
       run: |
-          git config --global user.name 'Elvin1999'
-          git config --global user.email 'camalzade_elvin@mail.ru'
-          if [[ $(git status --porcelain) ]]; then
-            git add .
-            git commit -m "Apply dotnet-format fixes"
-            git push
-          else
-            echo "No changes detected"
+        if [[ $(git status --porcelain) ]]; then
+          git add .
+          git commit -m "Apply dotnet-format fixes"
+          git push
+        else
+          echo "No changes detected"
+
       
       
     - name: Run Tests
