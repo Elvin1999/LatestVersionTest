@@ -41,8 +41,7 @@ jobs:
         git config --global user.name 'Elvin1999'
         git config --global user.email 'camalzade_elvin@mail.ru'
 
-    - name: Check for file changes
-      id: git-check
+    - name: Check for file changes and commit if necessary
       run: |
         if [[ $(git status --porcelain) ]]; then
           git add .
