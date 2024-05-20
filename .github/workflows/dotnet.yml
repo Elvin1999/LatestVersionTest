@@ -1,35 +1,32 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+name: .NET Format
 
-name: .NET
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  format:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-      
-    - name: Install dotnet-format
-      run: dotnet tool install -g dotnet-format
+      - uses: actions/checkout@v2
 
-    - name: Run dotnet-format
-      run: dotnet format 
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'  # Adjust the version as needed
+
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+
+      - name: Run dotnet-format
+        run: dotnet format --verify-no-changes --check LatestVersionTest.sln  # Adjust the path
+
+      - name: Check for file changes and commit if necessary
+        run: |
+          git config --global user.name 'Elvin1999'
+          git config --global user.email 'camalzade_elvin@mail.ru'
+          if [[ $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Apply dotnet-format fixes"
+            git push
+          else
+            echo "No changes detected"
